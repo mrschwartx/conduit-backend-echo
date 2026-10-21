@@ -1,0 +1,24 @@
+services:
+  conduit-mysql:
+    image: mysql:8.4
+    container_name: conduit-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-R00t_S9p!tBox_2026}
+      MYSQL_DATABASE: ${DB_NAME:-conduit}
+      MYSQL_USER: ${DB_USER:-conduit}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-S9p!tBox_2026@Db}
+    ports:
+      - "3306:3306"
+    volumes:
+      - conduit-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  conduit-backend:
+
+volumes:
+  snippetbox-mysql-data:
