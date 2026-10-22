@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: conduit-backend-echo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: conduit-backend-echo/go.mod
+          cache-dependency-path: conduit-backend-echo/go.sum
+      - run: go build ./...
+      - run: go vet ./...
+      # Integration tests start MySQL through Testcontainers (Docker is available on the runner).
+      - run: go test ./... -count=1
