@@ -1,0 +1,42 @@
+services:
+  taskly-postgres:
+    image: postgres:18.3
+    container_name: taskly-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-taskly}
+      POSTGRES_USER: ${DB_USER:-taskly}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required, run make docker/env}
+    volumes:
+      - taskly-postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  taskly-backend:
+    build:
+      context: ../taskly-backend
+      dockerfile: ../taskly-docker/taskly-backend/Dockerfile
+    image: taskly-backend:local
+    container_name: taskly-backend
+    restart: unless-stopped
+    environment:
+      APP_LEVEL: ${APP_LEVEL:-development}
+      DATABASE_URL: postgres://${DB_USER:-taskly}:${DB_PASSWORD}@taskly-postgres:5432/${DB_NAME:-taskly}
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET is required, run make docker/env}
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:3000}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "${PORT:-8080}:8080"
+    volumes:
+      - taskly-avatars:/app/public/images/users
+    depends_on:
+      taskly-postgres:
+        condition: service_healthy
+
+volumes:
+  taskly-postgres-data:
+  taskly-avatars:

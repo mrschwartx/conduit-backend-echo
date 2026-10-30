@@ -1,12 +1,12 @@
 {
     "folders": [
         {
-            "name": "conduit-backend-echo",
-            "path": "conduit-backend-echo"
+            "name": "taskly-backend",
+            "path": "taskly-backend"
         },
         {
-            "name": "conduit-docker",
-            "path": "conduit-docker"
+            "name": "taskly-docker",
+            "path": "taskly-docker"
         },
         {
             "name": ".",

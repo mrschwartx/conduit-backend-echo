@@ -9,7 +9,7 @@
     "scope-enum": [
       2,
       "always",
-      ["conduit", "conduit-backend", "docker", "ci", "deps"]
+      ["taskly", "taskly-backend", "backend", "docker", "ci", "deps"]
     ],
     "scope-case": [2, "always", "lower-case"],
     "subject-case": [0],
