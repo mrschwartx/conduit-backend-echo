@@ -1,3 +1,3 @@
 .DS_Store
 .env
-taskly-docker/.env
+conduit-docker/.env
